@@ -1,6 +1,6 @@
 """
-Universal Paste Refiner
-=======================
+Clip Clean
+==========
 
 A local-only desktop utility for cleaning raw Ctrl+A / Ctrl+C copies from
 websites, PDFs, and documents.
@@ -16,7 +16,7 @@ Installation
 
 Run
 ---
-    py universal_text_refiner.py
+    py clip_clean.py
 
 Shortcut
 --------
@@ -759,7 +759,7 @@ class UniversalRefinerApp(ctk.CTk):
 
         ctk.set_appearance_mode("dark")
 
-        self.title("Universal Paste Refiner")
+        self.title("Clip Clean")
         self.geometry("1280x820")
         self.minsize(960, 660)
         self.configure(fg_color=BG)
@@ -815,7 +815,7 @@ class UniversalRefinerApp(ctk.CTk):
 
         ctk.CTkLabel(
             header,
-            text="Universal Paste Refiner",
+            text="Clip Clean",
             font=self.font_brand,
             text_color=TEXT,
             anchor="w",

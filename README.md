@@ -1,8 +1,8 @@
-# Universal Paste Refiner
+# Clip Clean
 
 A clean, local-only Windows desktop app for turning messy copied text from websites, PDFs, and documents into readable content.
 
-![Universal Paste Refiner screenshot](docs/screenshot.png)
+![Clip Clean screenshot](docs/screenshot.png)
 
 ## What it does
 
@@ -44,7 +44,7 @@ run_local.bat
 
 The launcher will:
 
-1. Launch `dist/universal_text_refiner.exe` if a local build exists.
+1. Launch `dist/clip_clean.exe` if a local build exists.
 2. Otherwise, create a local virtual environment and install the required packages.
 3. Start the Python app.
 
@@ -52,7 +52,7 @@ The launcher will:
 
 ```powershell
 py -m pip install -r requirements.txt
-py universal_text_refiner.py
+py clip_clean.py
 ```
 
 Python 3.10 or newer is recommended.
@@ -69,13 +69,13 @@ Or run the equivalent command:
 
 ```powershell
 py -m pip install pyinstaller
-py -m PyInstaller --noconfirm --clean --noconsole --onefile --collect-all customtkinter universal_text_refiner.py
+py -m PyInstaller --noconfirm --clean --noconsole --onefile --collect-all customtkinter clip_clean.py
 ```
 
 The executable will be created at:
 
 ```text
-dist/universal_text_refiner.exe
+dist/clip_clean.exe
 ```
 
 The `--collect-all customtkinter` flag is important because it packages CustomTkinter’s theme and font assets.
@@ -84,14 +84,12 @@ The `--collect-all customtkinter` flag is important because it packages CustomTk
 
 ```text
 .
-├── universal_text_refiner.py   # Application source and cleaning logic
+├── clip_clean.py               # Application source and cleaning logic
 ├── requirements.txt            # Runtime dependencies
-├── run_local.bat               # Easy Windows launcher
-├── build_exe.bat               # Rebuilds the Windows executable
 ├── docs/
 │   └── screenshot.png          # README preview
 └── dist/
-    └── universal_text_refiner.exe   # Local build, ignored by Git
+    └── clip_clean.exe          # Local build, ignored by Git
 ```
 
 `dist/` and `build/` are intentionally ignored by Git. Attach the generated EXE to a GitHub Release instead of committing it to the repository.
