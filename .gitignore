@@ -21,3 +21,10 @@ desktop.ini
 # Logs and temporary files
 *.log
 *.tmp
+
+# Build scripts (not needed by end-users)
+build_exe.bat
+run_local.bat
+
+# Unrelated scripts
+leetcode_refiner.py
