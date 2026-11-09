@@ -1,75 +1,77 @@
 # Clip Clean
 
-A clean, local-only Windows desktop app for turning messy copied text from websites, PDFs, and documents into readable content.
+Copy text from any website, PDF, or document and paste it into Clip Clean. One click strips the clutter — nav links, cookie notices, timestamps, page numbers, newsletter prompts — and hands back only the content you actually wanted.
+
+Everything runs on your machine. No internet connection, no account, no API key.
 
 ![Clip Clean showing a messy web article on the left and the cleaned text on the right](docs/screenshots/01-cleaned-web-article.png)
 
-## What it does
+---
 
-Paste anything with **Ctrl+A → Ctrl+C**, click **Clean Text**, and the app removes common page clutter while preserving the useful parts.
+## What gets removed
 
-It removes:
-
-- Copyright, privacy-policy, cookie, and newsletter boilerplate
-- Navigation menus, breadcrumbs, and orphan labels such as "Home" or "Share"
+- Navigation menus, breadcrumbs, and stray labels like "Home" or "Share"
+- Cookie banners, newsletter sign-up prompts, and privacy-policy fragments
+- Copyright lines, social-share buttons, and footer boilerplate
 - Page numbers, counters, timestamps, and symbol-only lines
-- Wrapped-line breaks from PDFs and web copies
-- Excessive whitespace and blank lines
+- Hard line-breaks introduced by PDF exporters and web scrapers
 
-It preserves:
+## What stays intact
 
-- Paragraphs
-- Bullet and numbered lists
-- Tables
-- Markdown headings
+- Paragraphs and their flow
+- Bullet lists, numbered lists, and nested lists
+- Markdown tables
 - Fenced and indented code blocks
+- Headings
 
-All processing happens locally. There are no API calls, keys, accounts, or telemetry.
+---
 
 ## See it in action
 
-### Pull the useful text out of a messy web copy
+### Web article — before and after
 ![Clip Clean showing a raw web article beside its cleaned version](docs/screenshots/01-cleaned-web-article.png)
-*Navigation links, timestamps, and footer text are removed while the article is kept.*
+*Nav links, timestamps, and footer boilerplate gone. The article text remains.*
 
-### Copy the result with confirmation
+### Copy to clipboard with confirmation
 ![Clip Clean showing the Copied! status after copying the refined text](docs/screenshots/02-copied-notification.png)
-*The Copy to Clipboard action confirms success in the status bar.*
+*Hit Copy and the status bar confirms the refined text is on your clipboard.*
 
-### Keep lists, tables, and code intact
+### Lists, tables, and code survive the pass
 ![Clip Clean preserving a bullet list, numbered list, Markdown table, and Python code block](docs/screenshots/03-lists-tables-and-code.png)
-*Structure embedded in the copy survives the cleanup pass.*
+*Structured content is detected and left exactly as it was.*
 
-### Works in a smaller window
+### Responsive at any size
 ![Clip Clean resized to a compact 960x660 window with scrollable editors](docs/screenshots/04-compact-window.png)
-*The two-panel layout stays usable when the window is resized.*
+*The two-panel layout and scrollable editors hold up at the minimum 960 × 660 window.*
+
+---
 
 ## How it works
 
-Clip Clean processes text in a single pass through these stages:
+Clip Clean runs a deterministic, regex-based pipeline — no AI, no model weights, no network:
 
 1. **Normalize** — fix Unicode smart quotes, dashes, and stray control characters; collapse runs of spaces.
-2. **Protect code** — fence and indented code blocks are tagged and held aside so the cleaning steps never touch them.
-3. **Strip boilerplate** — copyright lines, cookie notices, newsletter prompts, privacy-policy fragments, and social-share labels are removed by pattern matching.
-4. **Drop navigation noise** — breadcrumb trails, single-word orphan labels ("Home", "Menu", "Share"), page-number lines, timestamps, and symbol-only lines are discarded.
-5. **Stitch paragraphs** — hard line-breaks inserted by PDF exporters and web scrapers are rejoined so each paragraph flows as one block.
-6. **Collapse whitespace** — more than two consecutive blank lines are reduced to one.
-7. **Restore code** — the protected blocks are placed back exactly where they were.
+2. **Protect code** — fenced and indented code blocks are held aside before any cleaning begins.
+3. **Strip boilerplate** — copyright lines, cookie notices, newsletter prompts, and social-share labels are removed by pattern matching.
+4. **Drop navigation noise** — breadcrumbs, orphan labels, page numbers, timestamps, and symbol-only lines are discarded.
+5. **Stitch paragraphs** — PDF- and scraper-inserted hard line breaks are rejoined into proper flowing paragraphs.
+6. **Collapse whitespace** — runs of more than two blank lines are reduced to one.
+7. **Restore code** — protected blocks are placed back exactly where they were.
 
-No AI model, API, or internet connection is involved at any step.
+---
 
-## Download and run
+## Download
 
-Download **clip_clean.exe** from the [Releases page](https://github.com/Icey067/Clipclean/releases/latest) and double-click it. No installation or Python required.
+Grab **clip_clean.exe** from the [Releases page](https://github.com/Icey067/Clipclean/releases/latest) and double-click it — no Python or installation needed.
 
 ## Run from source
+
+Requires Python 3.10 or newer.
 
 ```powershell
 py -m pip install -r requirements.txt
 py clip_clean.py
 ```
-
-Python 3.10 or newer is recommended.
 
 ## Build a standalone EXE
 
@@ -78,22 +80,20 @@ py -m pip install pyinstaller
 py -m PyInstaller --noconfirm --clean --noconsole --onefile --collect-all customtkinter clip_clean.py
 ```
 
-The executable is created at:
+Output: `dist/clip_clean.exe`
 
-```text
-dist/clip_clean.exe
-```
+> The `--collect-all customtkinter` flag bundles CustomTkinter's theme and font assets into the binary. Without it the app will not start.
 
-The `--collect-all customtkinter` flag is required because it packages CustomTkinter's theme and font assets alongside the binary.
+`dist/` and `build/` are listed in `.gitignore`. Attach the generated EXE to a GitHub Release rather than committing it.
 
-`dist/` and `build/` are intentionally ignored by Git. Attach the generated EXE to a GitHub Release instead of committing it to the repository.
+---
 
 ## Project structure
 
 ```text
 .
-├── clip_clean.py          # Application source and cleaning logic
-├── requirements.txt       # Runtime dependencies
+├── clip_clean.py          # Application source and all cleaning logic
+├── requirements.txt       # Runtime dependencies (customtkinter, pyperclip)
 ├── .gitignore
 ├── README.md
 └── docs/
@@ -104,14 +104,20 @@ The `--collect-all customtkinter` flag is required because it packages CustomTki
         └── 04-compact-window.png
 ```
 
+---
+
 ## Keyboard shortcut
 
-- **Ctrl + Enter** — clean the pasted text
+| Shortcut | Action |
+|---|---|
+| **Ctrl + Enter** | Clean the pasted text |
+
+---
 
 ## Limitations
 
-This is a heuristic cleaner, not an AI model. It is intentionally conservative, but unusual page layouts can still require a manual edit. Code is preserved reliably when it is fenced or clearly indented; heavily reformatted or image-based PDFs may not copy cleanly in the first place.
+Clip Clean is a heuristic tool, not an AI. It is intentionally conservative — when in doubt it keeps a line rather than removes it. Unusual page layouts may still need a quick manual tidy. Code blocks are preserved reliably only when they are fenced (` ``` `) or clearly indented; heavily reformatted or image-based PDFs may not copy as plain text in the first place.
 
 ## Privacy
 
-The application runs entirely on the local machine. It never uploads pasted text or uses an external service.
+Clip Clean runs entirely offline. It never reads your clipboard automatically, never sends text anywhere, and contains no telemetry.
